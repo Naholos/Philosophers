@@ -53,7 +53,7 @@ char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-void	print_status(int status, size_t time, t_philo phi);
+void	print_status(int st, size_t time, t_philo phi);
 int		free_all(t_philo *phi, pthread_t *list, int *forks, t_input *input);
 void	ft_sleep(size_t waiting_time, t_philo *phi);
 size_t	times(void);

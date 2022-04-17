@@ -34,18 +34,12 @@ static void	*actions(void *philosophers)
 
 	phi = (t_philo *) philosophers;
 	while (phi->times_must_eat != 0 && phi->com->ending == 0
-		&& phi->com->repeat
-		!= phi->com->diners * phi->com->rations)
+		&& phi->com->repeat != phi->com->diners * phi->com->rations)
 	{
 		if (forking(phi) == 0)
 			break ;
 		if (eating(phi) == 0)
 			break ;
-//		if (times() - phi->last_meal >= phi->com->time_to_die)
-//		{
-//			phi->com->ending = 1;
-//			break ;
-//		}
 		if (sleep_think(phi) == 0)
 			break ;
 	}
@@ -88,9 +82,7 @@ int	main(int argc, char *argv[])
 	t_philo		*phi;
 
 	input = (t_input *)(malloc(sizeof(t_input)));
-	if (input == NULL)
-		return (-1);
-	if (parse_input(argc, argv, input))
+	if (input == NULL || parse_input(argc, argv, input))
 		return (-1);
 	list = malloc(input->diners * sizeof(pthread_t));
 	forks = malloc(input->diners * sizeof(int));

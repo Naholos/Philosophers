@@ -14,30 +14,19 @@
 
 int	forking(t_philo *phi)
 {
-//	if (*phi->r_fork != phi->id || *phi->l_fork != phi->id)
-//	{
-		while (*phi->r_fork != 0)
+	while (*phi->r_fork != 0)
+	{
+		if (times() - phi->last_meal >= phi->com->time_to_die)
 		{
-			if (times() - phi->last_meal >= phi->com->time_to_die)
-			{
-				phi->com->ending = 1;
-				return (0);
-			}
+			phi->com->ending = 1;
+			return (0);
 		}
-		pthread_mutex_lock(&phi->m_fork);
-		*phi->r_fork = phi->id;
-		while (*phi->l_fork != 0)
-		{
-			if (times() - phi->last_meal >= phi->com->time_to_die)
-			{
-				phi->com->ending = 1;
-				return (0);
-			}
-		}
-		pthread_mutex_lock(&(phi->prev_phi->m_fork));
-		*phi->l_fork = phi->id;
-		print_status(0, times() - phi->com->begin, *phi);
-//	}
+	}
+	pthread_mutex_lock(&phi->m_fork);
+	*phi->r_fork = phi->id;
+	pthread_mutex_lock(&(phi->prev_phi->m_fork));
+	*phi->l_fork = phi->id;
+	print_status(0, times() - phi->com->begin, *phi);
 	return (1);
 }
 

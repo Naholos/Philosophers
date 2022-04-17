@@ -41,24 +41,24 @@ void	ft_sleep(size_t waiting_time, t_philo *phi)
 	}
 }
 
-void	print_status(int status, size_t time, t_philo phi)
+void	print_status(int st, size_t time, t_philo phi)
 {
 	pthread_mutex_lock(&phi.com->m_print);
-	if (status == 0)
+	if (st == 0)
 	{
 		printf("\x1b[36m""%lu ms, %d has taken a fork.\n", time, phi.id);
 		if (phi.com->diners > 1)
 			printf("\x1b[36m""%lu ms, %d has taken a fork.\n", time, phi.id);
 	}
-	else if (status == 1)
+	else if (st == 1)
 		printf("\x1b[32m""%lu ms, %d is eating.\n", time, phi.id);
-	else if (status == 2 && phi.com->repeat != phi.com->diners * phi.com->rations)
+	else if (st == 2 && phi.com->repeat != phi.com->diners * phi.com->rations)
 		printf("\x1b[33m""%lu ms, %d is sleeping.\n", time, phi.id);
-	else if (status == 3 && phi.com->repeat != phi.com->diners * phi.com->rations)
+	else if (st == 3 && phi.com->repeat != phi.com->diners * phi.com->rations)
 		printf("\x1b[34m""%lu ms, %d is thinking.\n", time, phi.id);
-	else if (status == 4 && phi.com->repeat != phi.com->diners * phi.com->rations)
+	else if (st == 4 && phi.com->repeat != phi.com->diners * phi.com->rations)
 		printf("\x1b[31m""%lu ms, %d has died.\n", time, phi.id);
-	if (status != 4)
+	if (st != 4)
 		pthread_mutex_unlock(&phi.com->m_print);
 }
 

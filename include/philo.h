@@ -6,7 +6,7 @@
 /*   By: aoteo-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 15:15:38 by aoteo-be          #+#    #+#             */
-/*   Updated: 2022/01/21 13:51:59 by                  ###   ########.fr       */
+/*   Updated: 2022/04/21 16:21:28 by aoteo-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,20 @@ typedef struct s_philo
 	t_input			*com;
 }	t_philo;
 
-int		forking(t_philo *phi);
+int		clean_input(t_input *input);
 int		eating(t_philo *phi);
-int		sleep_think(t_philo *phi);
+int		forking(t_philo *phi);
+int		free_all(t_philo *phi, pthread_t *list, int *forks, t_input *input);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 int		ft_atoi(const char *nptr);
+void	ft_sleep(size_t waiting_time, t_philo *phi);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
-void	print_status(int st, size_t time, t_philo phi);
-int		free_all(t_philo *phi, pthread_t *list, int *forks, t_input *input);
-void	ft_sleep(size_t waiting_time, t_philo *phi);
-size_t	times(void);
+int		manage_memory(t_philo *phi, pthread_t *list, int *forks, int number);
 int		parse_input(int argc, char *argv[], t_input *input);
+void	print_status(int st, size_t time, t_philo phi, int id);
+int		sleep_think(t_philo *phi);
+size_t	times(void);
 
 #endif

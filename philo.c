@@ -12,22 +12,6 @@
 
 #include "./include/philo.h"
 
-static int	manage_memory(t_philo *phi, pthread_t *list, int *forks, int number)
-{
-	if (phi != NULL && list != NULL && forks != NULL)
-	{
-		memset(forks, 0, number * sizeof(int));
-		return (0);
-	}
-	if (phi == NULL)
-		free(phi);
-	if (list == NULL)
-		free(list);
-	if (forks == NULL)
-		free(forks);
-	return (1);
-}
-
 static void	*actions(void *philosophers)
 {
 	t_philo	*phi;
@@ -73,6 +57,42 @@ static void	init_phi(t_input *input, t_philo *phi, int *forks)
 	}
 }
 
+void	main_loop(t_input *input, t_philo	*phi,	pthread_t	*list)
+{
+	int	i;
+
+	while (1)
+	{
+		if (input->repeat == input->rations * input->diners || input->ending)
+		{
+			if (input->repeat != input->rations * input->diners)
+				print_status(4, times() - input->begin, phi[i], input->ending);
+			input->ending = 1;
+			break ;
+		}
+		else
+		{
+			i = -1;
+			while (++i < phi->com->diners && phi->com->ending == 0)
+				pthread_join(list[i], NULL);
+		}
+		pthread_mutex_unlock(&input->m_death);
+	}
+}
+
+void	thread_management(t_input *input, t_philo *phi,	pthread_t *list)
+{
+	pthread_mutex_lock(&input->m_death);
+	if (input->diners == 1)
+	{
+		print_status(0, times() - phi->com->begin, *phi, phi->id);
+		ft_sleep(input->time_to_die, phi);
+		print_status(4, times() - phi->com->begin, *phi, phi->id);
+		return ;
+	}
+	main_loop(input, phi, list);
+}
+
 int	main(int argc, char *argv[])
 {
 	int			i;
@@ -95,30 +115,6 @@ int	main(int argc, char *argv[])
 		pthread_create(&list[i], NULL, actions, (void *) &phi[i]);
 	if (input->repeat == input->rations * input->diners)
 		return (0);
-	pthread_mutex_lock(&input->m_death);
-	if (input->diners == 1)
-	{
-		print_status(0, times() - phi->com->begin, *phi);
-		ft_sleep(input->time_to_die, phi);
-		print_status(4, times() - phi->com->begin, *phi);
-		return (free_all(phi, list, forks, input));
-	}
-	while (1)
-	{
-		if (input->repeat == input->rations * input->diners || input->ending)
-		{
-			input->ending = 1;
-			if (input->repeat != input->rations * input->diners)
-				print_status(4, times() - input->begin, phi[i]);
-			break ;
-		}
-		else
-		{
-			i = -1;
-			while (++i < phi->com->diners && phi->com->ending == 0)
-				pthread_join(list[i], NULL);
-		}
-		pthread_mutex_unlock(&input->m_death);
-	}
+	thread_management(input, phi, list);
 	return (free_all(phi, list, forks, input));
 }

@@ -6,7 +6,7 @@
 /*   By: aoteo-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 15:37:12 by aoteo-be          #+#    #+#             */
-/*   Updated: 2022/01/21 13:58:40 by                  ###   ########.fr       */
+/*   Updated: 2022/04/21 17:13:51 by aoteo-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ static void	free_bi_array(char **data)
 	free(data);
 }
 
+static int	checking_errors(char **data, int msg)
+{
+	if (msg == 0)
+		printf("Error: only positive decimal parameters allowed.");
+	else
+		printf("Error: only 4 or 5 input parameters allowed.");
+	free_bi_array(data);
+	return (-1);
+}
+
 static int	checking_input(char *sliced_data[])
 {
 	int	i;
@@ -39,18 +49,11 @@ static int	checking_input(char *sliced_data[])
 			if (j == 0 && sliced_data[i][j] == '+')
 				continue ;
 			else if (sliced_data[i][j] < '0' || sliced_data[i][j] > '9')
-			{
-				printf("Error: only positive decimal numbers are allowed.");
-				return (-1);
-			}
+				return (checking_errors(sliced_data, 0));
 		}
 	}
 	if (i < 4 || i > 5)
-	{
-		printf("Error: only 4 or 5 input parameters allowed.");
-		free_bi_array(sliced_data);
-		return (-1);
-	}
+		return (checking_errors(sliced_data, 1));
 	return (0);
 }
 
